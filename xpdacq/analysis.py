@@ -201,26 +201,25 @@ def save_tiff(headers, dark_subtraction=True, *, max_count=None):
     print('||********Saving process FINISHED********||')
 
 
-def plot_images(header):
-    """ function to plot images from header.
-
+def plot_images(headers):
+    """
+    function to plot images from header.
     It plots images, return nothing
     Parameters
     ----------
-        header : databroker header object
-            header objects obtained from a query to dataBroker
+    headers : databroker header object or list of databroker headers
+        header objects obtained from a query to dataBroker
     """
     # prepare header
-    if type(list(headers)[1]) == str:
-        header_list = list()
-        header_list.append(headers)
+    if isinstance(headers, list):
+        header_list = [headers]
     else:
         header_list = headers
 
-    for header in header_list:
-        uid = header.start.uid
-        img_field = _identify_image_field(header)
-        imgs = np.array(get_images(header, img_field))
+    for headers in header_list:
+        uid = headers.start.uid
+        img_field = _identify_image_field(headers)
+        imgs = np.array(get_images(headers, img_field))
         print('Plotting your data now...')
         for i in range(imgs.shape[0]):
             img = imgs[i]

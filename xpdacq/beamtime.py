@@ -85,13 +85,14 @@ def _configure_area_det(exposure):
     det = xpd_configuration["area_det"]
     # cs studio configuration doesn't propagate to python level
 
-    yield from bps.abs_set(det.cam.acquire_time, glbl["frame_acq_time"])
+    yield from bps.abs_set(det.cam.acquire_time, glbl["frame_acq_time"],
+                           wait=True)
     acq_time = det.cam.acquire_time.get()
     _check_mini_expo(exposure, acq_time)
     if hasattr(det, "images_per_set"):
         # compute number of frames
         num_frame = np.ceil(exposure / acq_time)
-        yield from bps.abs_set(det.images_per_set, num_frame)
+        yield from bps.abs_set(det.images_per_set, num_frame, wait=True)
     else:
         # The dexela detector does not support `images_per_set` so we just
         # use whatever the user asks for as the thing
